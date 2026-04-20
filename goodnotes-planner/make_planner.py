@@ -250,33 +250,67 @@ def nav_bar(c, items):
 def page_cover(c):
     fill_bg(c)
     c.bookmarkPage(bm_cover())
-
-    text(c, 'PROJECT  PLANNER', PAGE_W / 2, PAGE_H - 320, 50, DIM, FONT_L, 'center')
-
     cx = PAGE_W / 2
-    if len(YEARS) == 1:
-        cy = PAGE_H / 2 + 100
-        text(c, f'{YEARS[0]}', cx, cy, 320, FG, FONT_B, 'center')
-        hline(c, cx - 240, cy - 280, cx - 80, ACCENT, 2)
-        hline(c, cx + 80, cy - 280, cx + 240, ACCENT, 2)
-        text(c, '프로젝트 · 주간 · 회의록 통합 플래너',
-             cx, cy - 360, 32, DIM, FONT_L, 'center')
+
+    if LANDSCAPE:
+        # 가로: 연도 가로 배치, 큰 여백
+        text(c, 'PROJECT  PLANNER', cx, PAGE_H - 220, 56, DIM, FONT_L, 'center')
+
+        if len(YEARS) == 1:
+            cy = PAGE_H / 2 + 80
+            text(c, f'{YEARS[0]}', cx, cy, 360, FG, FONT_B, 'center')
+            # 장식 라인 (큰 연도와 충분한 거리)
+            hline(c, cx - 360, cy - 280, cx - 160, ACCENT, 2.5)
+            hline(c, cx + 160, cy - 280, cx + 360, ACCENT, 2.5)
+            text(c, '프로젝트 · 주간 · 회의록 통합 플래너',
+                 cx, cy - 350, 36, DIM, FONT_L, 'center')
+        else:
+            # 두 연도 가로 배치 (2026  ·  2027)
+            cy = PAGE_H / 2 + 80
+            text(c, f'{YEARS[0]}', cx - 440, cy, 320, FG, FONT_B, 'center')
+            text(c, '·', cx, cy + 30, 200, ACCENT, FONT_L, 'center')
+            text(c, f'{YEARS[-1]}', cx + 440, cy, 320, FG, FONT_B, 'center')
+            text(c, f'{len(YEARS)}개년 프로젝트 · 주간 · 회의록 통합 플래너',
+                 cx, cy - 280, 36, DIM, FONT_L, 'center')
+
+        # NAME / TEAM (좌측)
+        text(c, 'NAME', MX, 360, 26, DIM, FONT_L)
+        hline(c, MX + 140, 368, MX + 900, FAINT, 1)
+        text(c, 'TEAM', MX, 280, 26, DIM, FONT_L)
+        hline(c, MX + 140, 288, MX + 900, FAINT, 1)
+
+        # 버튼 (하단 가로 한 줄)
+        btn_y = 140
+        btn_h = 110
     else:
-        cy = PAGE_H / 2 + 240
-        text(c, f'{YEARS[0]}', cx, cy,        260, FG,  FONT_B, 'center')
-        text(c, f'{YEARS[-1]}', cx, cy - 380,  260, FG,  FONT_B, 'center')
-        hline(c, cx - 240, cy - 200, cx - 80, ACCENT, 2)
-        hline(c, cx + 80, cy - 200, cx + 240, ACCENT, 2)
-        text(c, f'{len(YEARS)}개년 프로젝트 · 주간 · 회의록 통합 플래너',
-             cx, cy - 540, 32, DIM, FONT_L, 'center')
+        # 포트레이트
+        text(c, 'PROJECT  PLANNER', cx, PAGE_H - 320, 50, DIM, FONT_L, 'center')
 
-    text(c, 'NAME', MX, 380, 22, DIM, FONT_L)
-    hline(c, MX + 110, 386, MX + 700, FAINT, 1)
-    text(c, 'TEAM', MX, 310, 22, DIM, FONT_L)
-    hline(c, MX + 110, 316, MX + 700, FAINT, 1)
+        if len(YEARS) == 1:
+            cy = PAGE_H / 2 + 100
+            text(c, f'{YEARS[0]}', cx, cy, 320, FG, FONT_B, 'center')
+            hline(c, cx - 240, cy - 280, cx - 80, ACCENT, 2)
+            hline(c, cx + 80, cy - 280, cx + 240, ACCENT, 2)
+            text(c, '프로젝트 · 주간 · 회의록 통합 플래너',
+                 cx, cy - 360, 32, DIM, FONT_L, 'center')
+        else:
+            # 두 연도 세로 배치: 충분한 간격으로 라인이 텍스트와 안 겹치게
+            cy = PAGE_H / 2 + 320
+            text(c, f'{YEARS[0]}', cx, cy,         240, FG, FONT_B, 'center')
+            hline(c, cx - 240, cy - 290, cx - 80, ACCENT, 2)
+            hline(c, cx + 80, cy - 290, cx + 240, ACCENT, 2)
+            text(c, f'{YEARS[-1]}', cx, cy - 460, 240, FG, FONT_B, 'center')
+            text(c, f'{len(YEARS)}개년 프로젝트 · 주간 · 회의록 통합 플래너',
+                 cx, cy - 620, 30, DIM, FONT_L, 'center')
 
-    btn_y = 470
-    btn_h = 100
+        text(c, 'NAME', MX, 380, 22, DIM, FONT_L)
+        hline(c, MX + 110, 386, MX + 700, FAINT, 1)
+        text(c, 'TEAM', MX, 310, 22, DIM, FONT_L)
+        hline(c, MX + 110, 316, MX + 700, FAINT, 1)
+
+        btn_y = 470
+        btn_h = 100
+
     btns = [('목차', bm_index())]
     for y in YEARS:
         btns.append((f'{y} 연간', bm_annual(y)))
@@ -286,7 +320,7 @@ def page_cover(c):
     for i, (lbl, d) in enumerate(btns):
         x = MX + i * (bw + 14)
         box(c, x, btn_y, bw, btn_h, stroke=ACCENT, width=1.4, radius=14)
-        text(c, lbl, x + bw / 2, btn_y + 38, 30, FG, FONT, 'center')
+        text(c, lbl, x + bw / 2, btn_y + btn_h / 2 - 12, 32, FG, FONT, 'center')
         link(c, d, x, btn_y, bw, btn_h)
 
     c.showPage()
@@ -599,50 +633,50 @@ def _page_week_landscape(c, sunday, mon_y, mon_m):
 
     # === 사이드바 ===
     # 우선순위
-    pri_h = 480
+    pri_h = 540
     box(c, side_x, top_y - pri_h, side_w, pri_h, stroke=FAINT, width=1, radius=14)
-    text(c, '우선순위', side_x + 32, top_y - 56, 30, ACCENT, FONT_B)
-    text(c, 'A · B · C', side_x + 220, top_y - 56, 16, DIM, FONT_L)
+    text(c, '우선순위', side_x + 36, top_y - 60, 32, ACCENT, FONT_B)
+    text(c, 'A · B · C', side_x + 240, top_y - 60, 18, DIM, FONT_L)
     rows = [('A', 3), ('B', 3), ('C', 3)]
-    ry = top_y - 130
+    ry = top_y - 140
     for tier, count in rows:
         for i in range(1, count + 1):
-            text(c, f'{tier}{i}', side_x + 36, ry, 22, ACCENT if tier == 'A' else DIM, FONT_B)
-            text(c, '□', side_x + 96, ry, 24, DIM, FONT)
-            hline(c, side_x + 138, ry - 14, side_x + side_w - 36, FAINT, 0.6)
-            ry -= 38
-        ry -= 12
+            text(c, f'{tier}{i}', side_x + 40, ry, 26, ACCENT if tier == 'A' else DIM, FONT_B)
+            text(c, '□', side_x + 110, ry, 28, DIM, FONT)
+            hline(c, side_x + 158, ry - 16, side_x + side_w - 40, FAINT, 0.6)
+            ry -= 42
+        ry -= 14
 
     # 이번 주 집중
     foc_y = top_y - pri_h - 30
-    foc_h = 240
+    foc_h = 250
     box(c, side_x, foc_y - foc_h, side_w, foc_h, stroke=FAINT, width=1, radius=14)
-    text(c, '이번 주 집중', side_x + 32, foc_y - 50, 28, ACCENT, FONT_B)
+    text(c, '이번 주 집중', side_x + 36, foc_y - 56, 30, ACCENT, FONT_B)
     for i in range(3):
-        ly = foc_y - 110 - i * 56
-        text(c, '◆', side_x + 36, ly, 22, HILITE, FONT)
-        hline(c, side_x + 80, ly - 14, side_x + side_w - 36, FAINT, 0.6)
+        ly = foc_y - 120 - i * 56
+        text(c, '◆', side_x + 40, ly, 24, HILITE, FONT)
+        hline(c, side_x + 88, ly - 16, side_x + side_w - 40, FAINT, 0.6)
 
     # 메모
     mem_y = foc_y - foc_h - 30
-    mem_h = 320
+    mem_h = 300
     box(c, side_x, mem_y - mem_h, side_w, mem_h, stroke=FAINT, width=1, radius=14)
-    text(c, '메모', side_x + 32, mem_y - 50, 28, ACCENT, FONT_B)
-    for i in range(5):
-        ly = mem_y - 110 - i * 50
-        hline(c, side_x + 36, ly, side_x + side_w - 36, FAINT, 0.6)
+    text(c, '메모', side_x + 36, mem_y - 56, 30, ACCENT, FONT_B)
+    for i in range(4):
+        ly = mem_y - 120 - i * 54
+        hline(c, side_x + 40, ly, side_x + side_w - 40, FAINT, 0.6)
 
     # 잘한 것 / 개선할 것 (가로 2분할)
     rev_y = mem_y - mem_h - 30
-    rev_h = 200
+    rev_h = 150
     rev_w = (side_w - 20) / 2
     for i, lbl in enumerate(['잘한 것', '개선할 것']):
         rx = side_x + i * (rev_w + 20)
         box(c, rx, rev_y - rev_h, rev_w, rev_h, stroke=FAINT, width=1, radius=14)
-        text(c, lbl, rx + 24, rev_y - 44, 22, ACCENT, FONT_B)
-        for k in range(3):
-            ly = rev_y - 90 - k * 38
-            hline(c, rx + 24, ly, rx + rev_w - 24, FAINT, 0.5)
+        text(c, lbl, rx + 26, rev_y - 46, 24, ACCENT, FONT_B)
+        for k in range(2):
+            ly = rev_y - 90 - k * 40
+            hline(c, rx + 26, ly, rx + rev_w - 26, FAINT, 0.5)
 
     # === 우: 7일 그리드 ===
     grid_top = top_y
@@ -888,12 +922,127 @@ def page_projects_index(c):
     c.showPage()
 
 
+# ========== 프로젝트 상세 (가로용 별도 함수) ==========
+def _page_project_landscape(c, i):
+    # 헤더 (전체 너비), 그 아래 2×2 그리드: 마일스톤 | 주간체크 / 시간로그 | 할일
+    top_y = PAGE_H - 220
+    bottom_y = MB + 100
+    header_h = 200
+    box(c, MX, top_y - header_h, PAGE_W - 2 * MX, header_h, stroke=FAINT, width=1, radius=14)
+
+    # 헤더 필드 (3행 레이아웃)
+    text(c, '프로젝트명', MX + 32, top_y - 50, 20, DIM, FONT_L)
+    hline(c, MX + 32, top_y - 78, MX + 1300, FAINT, 0.8)
+    text(c, '기간', MX + 1340, top_y - 50, 20, DIM, FONT_L)
+    hline(c, MX + 1340, top_y - 78, PAGE_W - MX - 32, FAINT, 0.8)
+    text(c, '목표', MX + 32, top_y - 116, 20, DIM, FONT_L)
+    hline(c, MX + 32, top_y - 144, PAGE_W - MX - 32, FAINT, 0.8)
+    text(c, '오너', MX + 32, top_y - 178, 20, DIM, FONT_L)
+    hline(c, MX + 100, top_y - 188, MX + 700, FAINT, 0.6)
+    text(c, '상태', MX + 760, top_y - 178, 20, DIM, FONT_L)
+    hline(c, MX + 830, top_y - 188, MX + 1300, FAINT, 0.6)
+    text(c, '우선순위', MX + 1340, top_y - 178, 20, DIM, FONT_L)
+    hline(c, MX + 1450, top_y - 188, PAGE_W - MX - 32, FAINT, 0.6)
+
+    # 2×2 그리드 영역
+    grid_top_y = top_y - header_h - 80
+    grid_total_h = grid_top_y - bottom_y
+    cell_h = (grid_total_h - 80) / 2  # 두 행, 80pt 간격
+    cell_w = (PAGE_W - 2 * MX - 60) / 2
+
+    # 좌상: 마일스톤
+    mil_x = MX
+    mil_y = grid_top_y
+    text(c, '마일스톤', mil_x, mil_y, 30, ACCENT, FONT_B)
+    box(c, mil_x, mil_y - cell_h - 10, cell_w, cell_h, stroke=FAINT, width=1, radius=12)
+    ths = ['#', '마일스톤', '목표일', '완료일']
+    th_widths = [80, cell_w - 80 - 200 - 200, 200, 200]
+    hx = mil_x
+    hy = mil_y - 56
+    for w, label in zip(th_widths, ths):
+        text(c, label, hx + 16, hy, 18, DIM, FONT_L)
+        hx += w
+    hline(c, mil_x, hy - 16, mil_x + cell_w, FAINT, 0.8)
+    for r in range(5):
+        ry = hy - 60 - r * 56
+        text(c, f'M{r + 1}', mil_x + 16, ry, 22, DIM, FONT_B)
+        hline(c, mil_x + 80, ry - 12, mil_x + cell_w - 16, FAINT, 0.5)
+
+    # 우상: 주간 체크
+    wk_x = MX + cell_w + 60
+    wk_y = grid_top_y
+    text(c, '주간 체크', wk_x, wk_y, 30, ACCENT, FONT_B)
+    box(c, wk_x, wk_y - cell_h - 10, cell_w, cell_h, stroke=FAINT, width=1, radius=12)
+    col_labels = ['주', '계획', '실행', '리뷰']
+    sub_w = [90, (cell_w - 90) / 3, (cell_w - 90) / 3, (cell_w - 90) / 3]
+    sx = wk_x
+    sy = wk_y - 56
+    for w, label in zip(sub_w, col_labels):
+        text(c, label, sx + 16, sy, 18, DIM, FONT_L)
+        sx += w
+    hline(c, wk_x, sy - 16, wk_x + cell_w, FAINT, 0.8)
+    for r in range(6):
+        ry = sy - 60 - r * 50
+        text(c, f'W{r + 1}', wk_x + 22, ry, 20, DIM, FONT_B)
+        cx = wk_x + 90
+        for w in sub_w[1:]:
+            vline(c, cx, ry - 22, ry + 30, FAINT, 0.4)
+            cx += w
+        hline(c, wk_x, ry - 22, wk_x + cell_w, FAINT, 0.4)
+
+    # 좌하: 소요시간 로그
+    log_x = MX
+    log_y = grid_top_y - cell_h - 80
+    text(c, '소요시간 로그', log_x, log_y, 30, ACCENT, FONT_B)
+    box(c, log_x, log_y - cell_h - 10, cell_w, cell_h, stroke=FAINT, width=1, radius=12)
+    log_cols = ['날짜', '작업', '시간', '비고']
+    lw = [150, (cell_w - 150 - 130 - 150), 130, 150]
+    lsx = log_x
+    lsy = log_y - 56
+    for w, label in zip(lw, log_cols):
+        text(c, label, lsx + 16, lsy, 18, DIM, FONT_L)
+        lsx += w
+    hline(c, log_x, lsy - 16, log_x + cell_w, FAINT, 0.8)
+    for r in range(6):
+        ry = lsy - 60 - r * 50
+        hline(c, log_x, ry - 18, log_x + cell_w, FAINT, 0.4)
+        cx = log_x
+        for w in lw[:-1]:
+            cx += w
+            vline(c, cx, ry - 22, ry + 30, FAINT, 0.4)
+
+    # 우하: 할일 목록
+    td_x = MX + cell_w + 60
+    td_y = grid_top_y - cell_h - 80
+    text(c, '할일 목록', td_x, td_y, 30, ACCENT, FONT_B)
+    box(c, td_x, td_y - cell_h - 10, cell_w, cell_h, stroke=FAINT, width=1, radius=12)
+    todo_rows = 7
+    inner_h = cell_h - 60
+    for r in range(todo_rows):
+        ty = td_y - 60 - r * inner_h / todo_rows
+        text(c, '□', td_x + 30, ty, 22, DIM, FONT)
+        hline(c, td_x + 70, ty - 12, td_x + cell_w - 30, FAINT, 0.5)
+
+    prev_dest = bm_project(i - 1) if i > 1 else None
+    next_dest = bm_project(i + 1) if i < PROJECT_SLOTS else None
+    nav_bar(c, [('목차', bm_index()),
+                ('프로젝트 목록', bm_projects()),
+                (f'◀ P{i - 1:02d}' if prev_dest else '', prev_dest),
+                (f'P{i + 1:02d} ▶' if next_dest else '', next_dest),
+                ('회의록', bm_meetings())])
+    c.showPage()
+
+
 # ========== 프로젝트 상세 ==========
 def page_project(c, i):
     fill_bg(c)
     c.bookmarkPage(bm_project(i))
     page_frame(c, f'P{i:02d}', '프로젝트 상세', f'프로젝트  ›  P{i:02d}')
     link(c, bm_projects(), MX, PAGE_H - 110, 280, 38)
+
+    if LANDSCAPE:
+        _page_project_landscape(c, i)
+        return
 
     # 상단 헤더
     top_y = PAGE_H - 230
@@ -1043,12 +1192,20 @@ def page_meetings_index(c):
         x = MX + col * (cw + gap)
         y = top_y - (r + 1) * ch - r * gap
         box(c, x, y, cw, ch, stroke=FAINT, width=1, radius=12)
-        text(c, f'M{i + 1:02d}', x + cw / 2, y + ch - 76, 40, ACCENT, FONT_B, 'center')
-        text(c, '날짜', x + 22, y + ch - 138, 16, DIM, FONT_L)
-        hline(c, x + 22, y + ch - 158, x + cw - 22, FAINT, 0.5)
-        text(c, '제목', x + 22, y + ch - 196, 16, DIM, FONT_L)
-        hline(c, x + 22, y + ch - 216, x + cw - 22, FAINT, 0.5)
-        hline(c, x + 22, y + ch - 256, x + cw - 22, FAINT, 0.5)
+        if LANDSCAPE:
+            # 카드가 짧으니 컴팩트: 번호 + 날짜 + 제목 한 줄
+            text(c, f'M{i + 1:02d}', x + cw / 2, y + ch - 56, 32, ACCENT, FONT_B, 'center')
+            text(c, '날짜', x + 22, y + ch - 100, 16, DIM, FONT_L)
+            hline(c, x + 22, y + ch - 116, x + cw - 22, FAINT, 0.5)
+            text(c, '제목', x + 22, y + ch - 148, 16, DIM, FONT_L)
+            hline(c, x + 22, y + ch - 164, x + cw - 22, FAINT, 0.5)
+        else:
+            text(c, f'M{i + 1:02d}', x + cw / 2, y + ch - 76, 40, ACCENT, FONT_B, 'center')
+            text(c, '날짜', x + 22, y + ch - 138, 16, DIM, FONT_L)
+            hline(c, x + 22, y + ch - 158, x + cw - 22, FAINT, 0.5)
+            text(c, '제목', x + 22, y + ch - 196, 16, DIM, FONT_L)
+            hline(c, x + 22, y + ch - 216, x + cw - 22, FAINT, 0.5)
+            hline(c, x + 22, y + ch - 256, x + cw - 22, FAINT, 0.5)
         link(c, bm_meeting(i + 1), x, y, cw, ch)
 
     nav_bar(c, [('표지', bm_cover()),
@@ -1059,12 +1216,101 @@ def page_meetings_index(c):
     c.showPage()
 
 
+# ========== 회의록 상세 (가로용 별도 함수) ==========
+def _page_meeting_landscape(c, i):
+    top_y = PAGE_H - 220
+    bottom_y = MB + 100
+
+    # 헤더 (전체 너비)
+    head_h = 180
+    box(c, MX, top_y - head_h, PAGE_W - 2 * MX, head_h, stroke=FAINT, width=1, radius=14)
+    text(c, '제목', MX + 32, top_y - 50, 20, DIM, FONT_L)
+    hline(c, MX + 100, top_y - 64, PAGE_W - MX - 32, FAINT, 0.8)
+    text(c, '날짜', MX + 32, top_y - 110, 20, DIM, FONT_L)
+    hline(c, MX + 100, top_y - 122, MX + 600, FAINT, 0.6)
+    text(c, '시간', MX + 660, top_y - 110, 20, DIM, FONT_L)
+    hline(c, MX + 730, top_y - 122, MX + 1200, FAINT, 0.6)
+    text(c, '장소', MX + 1260, top_y - 110, 20, DIM, FONT_L)
+    hline(c, MX + 1330, top_y - 122, PAGE_W - MX - 32, FAINT, 0.6)
+    text(c, '참석자', MX + 32, top_y - 162, 20, DIM, FONT_L)
+    hline(c, MX + 130, top_y - 174, PAGE_W - MX - 32, FAINT, 0.6)
+
+    # 본문 영역: 좌(안건+논의) / 우(결정+액션) 2열
+    body_top = top_y - head_h - 60
+    body_h = body_top - bottom_y
+    col_gap = 60
+    col_w = (PAGE_W - 2 * MX - col_gap) / 2
+
+    # 좌 상: 안건
+    ag_h = 240
+    text(c, '안건', MX, body_top, 30, ACCENT, FONT_B)
+    box(c, MX, body_top - ag_h - 10, col_w, ag_h, stroke=FAINT, width=1, radius=12)
+    for r in range(4):
+        ly = body_top - 60 - r * 50
+        text(c, f'{r + 1}.', MX + 32, ly, 22, DIM, FONT_B)
+        hline(c, MX + 90, ly - 12, MX + col_w - 32, FAINT, 0.5)
+
+    # 좌 하: 논의 내용 (남은 높이)
+    dis_top = body_top - ag_h - 80
+    dis_h = dis_top - bottom_y - 50
+    text(c, '논의 내용', MX, dis_top, 30, ACCENT, FONT_B)
+    box(c, MX, dis_top - dis_h - 10, col_w, dis_h, stroke=FAINT, width=1, radius=12)
+    inner = dis_h - 70
+    n_lines = max(4, int(inner / 56))
+    for r in range(n_lines):
+        ly = dis_top - 60 - r * 56
+        if ly < dis_top - dis_h + 20:
+            break
+        hline(c, MX + 32, ly - 8, MX + col_w - 32, FAINT, 0.4)
+
+    # 우 상: 결정사항
+    rx = MX + col_w + col_gap
+    dec_h = 280
+    text(c, '결정사항', rx, body_top, 30, ACCENT, FONT_B)
+    box(c, rx, body_top - dec_h - 10, col_w, dec_h, stroke=FAINT, width=1, radius=12)
+    for r in range(4):
+        ly = body_top - 60 - r * 56
+        text(c, '✓', rx + 32, ly, 22, HILITE, FONT_B)
+        hline(c, rx + 80, ly - 12, rx + col_w - 32, FAINT, 0.5)
+
+    # 우 하: 액션 아이템 (남은 높이)
+    act_top = body_top - dec_h - 80
+    act_h = act_top - bottom_y - 50
+    text(c, '액션 아이템', rx, act_top, 30, ACCENT, FONT_B)
+    box(c, rx, act_top - act_h - 10, col_w, act_h, stroke=FAINT, width=1, radius=12)
+    text(c, '담당', rx + 32, act_top - 60, 18, DIM, FONT_L)
+    text(c, '내용', rx + 230, act_top - 60, 18, DIM, FONT_L)
+    text(c, '기한', rx + col_w - 200, act_top - 60, 18, DIM, FONT_L)
+    hline(c, rx, act_top - 76, rx + col_w, FAINT, 0.8)
+    n_act = max(3, int((act_h - 100) / 56))
+    for r in range(n_act):
+        ly = act_top - 116 - r * 56
+        if ly < act_top - act_h + 20:
+            break
+        hline(c, rx + 32, ly - 12, rx + col_w - 32, FAINT, 0.5)
+        vline(c, rx + 220, ly - 22, ly + 36, FAINT, 0.4)
+        vline(c, rx + col_w - 210, ly - 22, ly + 36, FAINT, 0.4)
+
+    prev_dest = bm_meeting(i - 1) if i > 1 else None
+    next_dest = bm_meeting(i + 1) if i < MEETING_SLOTS else None
+    nav_bar(c, [('목차', bm_index()),
+                ('회의록 목록', bm_meetings()),
+                (f'◀ M{i - 1:02d}' if prev_dest else '', prev_dest),
+                (f'M{i + 1:02d} ▶' if next_dest else '', next_dest),
+                ('프로젝트', bm_projects())])
+    c.showPage()
+
+
 # ========== 회의록 상세 ==========
 def page_meeting(c, i):
     fill_bg(c)
     c.bookmarkPage(bm_meeting(i))
     page_frame(c, f'M{i:02d}', 'Meeting Note', f'회의록  ›  M{i:02d}')
     link(c, bm_meetings(), MX, PAGE_H - 110, 280, 38)
+
+    if LANDSCAPE:
+        _page_meeting_landscape(c, i)
+        return
 
     top_y = PAGE_H - 230
     head_h = 220
