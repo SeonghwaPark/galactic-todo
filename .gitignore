@@ -20,3 +20,6 @@ npm-debug.log*
 .env
 .env.local
 .env.*.local
+
+# Claude Code (per-PC local settings with secrets)
+.claude/settings.local.json
